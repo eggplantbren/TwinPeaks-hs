@@ -58,5 +58,7 @@ generateSampler (Model {..}) numParticles rng = do
                         theScalars1'
                         theScalars2'
                         statuses 0
-  return sampler
+
+ -- Use a strict return
+  return $! sampler
 
