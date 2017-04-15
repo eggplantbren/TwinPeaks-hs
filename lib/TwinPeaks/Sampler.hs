@@ -37,7 +37,7 @@ generateSampler :: Model a
                 -> Int
                 -> Gen RealWorld
                 -> IO (Sampler a)
-generateSampler (Model {..}) numParticles rng = do
+generateSampler Model {..} numParticles rng = do
 
   -- Generate the particles
   particles <- V.replicateM numParticles (fromPrior rng)
