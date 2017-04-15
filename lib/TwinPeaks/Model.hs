@@ -19,7 +19,14 @@ data Model a = Model
                              -> Gen RealWorld
                              -> IO (a, Double),
 
+                   -- Two 'scalars'
+                   scalars1  :: a -> Double,
+                   scalars2  :: a -> Double,
+
                    -- Convert to a string, for CSV output
-                   render    :: a -> String
+                   toStrLn   :: a -> String,
+
+                   -- For header of CSV output, name the columns
+                   header    :: String
                }
 
