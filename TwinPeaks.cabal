@@ -34,6 +34,4 @@ executable Main
   ghc-options:         -Wall -O2
   build-depends:       base >= 4.7 && < 5,
                        mwc-random,
-                       primitive,
-                       vector,
                        TwinPeaks

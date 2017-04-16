@@ -12,7 +12,7 @@ import TwinPeaks.Utils
 
 -- Number of coordinates
 simpleSize :: Int
-simpleSize = 1000000
+simpleSize = 10
 
 -- fromPrior
 simpleFromPrior :: Gen RealWorld -> IO (U.Vector Double)
@@ -43,12 +43,10 @@ simplePerturb xs rng = do
 
   return $! (xs', 0.0)
 
-hard = tanh . tanh . tanh . tanh . tanh
-
 -- First scalar
 simpleScalar1 :: U.Vector Double -> Double
 simpleScalar1 xs = U.foldl'
-                            (\acc x -> acc - hard x**0.32)
+                            (\acc x -> acc - 0.5*(x - 0.5)**2.0)
                             0.0
                             xs
 
