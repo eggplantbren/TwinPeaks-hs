@@ -9,10 +9,12 @@ import qualified Data.Vector.Unboxed as U
 import System.IO
 import TwinPeaks.Model
 import System.Random.MWC
+import System.Random.MWC.Distributions (uniformShuffle)
 
 -- A particle can be either in the foreground or
 -- in the background.
 data ParticleStatus = Foreground | Background
+  deriving Show
 
 -- A type that defines the state of a
 -- sampler over space 'a'
@@ -58,17 +60,21 @@ generateSampler Model {..} numParticles rng = do
   let theScalars2' = U.convert theScalars2 :: U.Vector Double
 
   -- Statuses
-  let statuses = V.replicate numParticles Foreground
+  let half = numParticles `div` 2
+  let statuses = replicate half Foreground ++
+                    (replicate (numParticles-half) Background)
+  let statusesVector  = V.fromList statuses
+  statusesVector' <- uniformShuffle statusesVector rng
 
   -- Put the sampler together
   let sampler = Sampler particles
                         theScalars1'
                         theScalars2'
-                        statuses 0
+                        statusesVector'
+                        0
 
   -- Uses sampler for the sole purpose of forcing its evaluation
   seq sampler (return ())
-
   putStrLn "done."
 
   -- Use a strict return

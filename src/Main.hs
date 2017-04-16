@@ -8,6 +8,7 @@ import TwinPeaks.Sampler
 -- Main action
 main :: IO ()
 main = withSystemRandom . asGenIO $ \rng -> do
-  _ <- generateSampler simpleExample 10 rng
+  sampler <- generateSampler simpleExample 10 rng
+  print $ samplerStatuses sampler
   return ()
 
