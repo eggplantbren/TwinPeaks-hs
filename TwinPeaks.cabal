@@ -35,4 +35,5 @@ executable Main
   build-depends:       base >= 4.7 && < 5,
                        mwc-random,
                        primitive,
+                       vector,
                        TwinPeaks

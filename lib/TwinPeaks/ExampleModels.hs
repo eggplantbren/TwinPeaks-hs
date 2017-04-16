@@ -6,12 +6,13 @@ import qualified Data.Vector.Unboxed as U
 import qualified Data.Vector.Unboxed.Mutable as UM
 import System.Random.MWC
 import TwinPeaks.Model
+import TwinPeaks.Utils
 
 -- Simple Example starts here ---------------------------------------
 
 -- Number of coordinates
 simpleSize :: Int
-simpleSize = 10
+simpleSize = 1000
 
 -- fromPrior
 simpleFromPrior :: Gen RealWorld -> IO (U.Vector Double)
@@ -27,13 +28,26 @@ simplePerturb xs rng = do
 
   -- Choose a coordinate to perturb
   which <- uniformR (0, simpleSize - 1) rng
-  return $! (xs, 0.0)
 
+  -- Can't use unsafeThaw, original vector needs to be
+  -- preserved in case the proposal is rejected.
+  xsMutable <- U.thaw xs
+
+  -- New value of coordinate
+  x' <- fmap (xs U.! which + ) (randh rng)
+  UM.unsafeWrite xsMutable which x'
+
+  -- Freeze modified vector
+  xs' <- U.unsafeFreeze xsMutable
+
+  return $! (xs', 0.0)
 
 -- First scalar
 simpleScalar1 :: U.Vector Double -> Double
-simpleScalar1 xs = U.sum $ U.map ((** 2.0) . subtract 0.5) xs
-
+simpleScalar1 xs = U.foldl'
+                            (\acc x -> acc - 0.5*(x - 0.5)**2)
+                            0.0
+                            xs
 
 -- Second scalar
 simpleScalar2 :: U.Vector Double -> Double
