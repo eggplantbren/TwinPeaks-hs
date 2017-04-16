@@ -1,5 +1,6 @@
 module TwinPeaks.Utils where
 
+-- Imports
 import Control.Monad.Primitive (RealWorld)
 import System.Random.MWC as MWC (Gen, uniform, uniformR)
 import System.Random.MWC.Distributions as MWC (standard)
@@ -12,13 +13,13 @@ logsumexp a b = log (exp (a - xm) + exp (b - xm)) + xm where
 -- Logdiffexp
 logdiffexp :: Double -> Double -> Double
 logdiffexp a b
-    | b >= a = 0
+    | b >= a    = 0
     | otherwise = b + log (exp (a - b) - 1.0)
 
 -- Mod
 myMod :: Double -> Double -> Double
-myMod y x = (y/x - (fromIntegral . myFloor) (y/x))*x where
-                myFloor = floor :: Double -> Int
+myMod y x = (y/x - (fromIntegral . myFloor) (y/x))*x
+  where myFloor = floor :: Double -> Int
 
 -- Wrap
 wrap :: Double -> (Double, Double) -> Double
@@ -31,10 +32,10 @@ wrap x (a, b)
 
 -- My favourite heavy tailed distribution
 randh :: Gen RealWorld -> IO Double
-randh gen = do
-    a <- MWC.standard gen
-    b <- MWC.uniform gen
-    n <- MWC.standard gen
+randh rng = do
+    a <- MWC.standard rng
+    b <- MWC.uniform  rng
+    n <- MWC.standard rng
     return $! transform a b n
   where
     transform a b n =
@@ -45,9 +46,9 @@ randh gen = do
 -- that is different from the supplied reference.
 chooseCopy :: Int -> Int -> Gen RealWorld -> IO Int
 chooseCopy ref n = loop where
-  loop prng = do
-    index <- MWC.uniformR (0, n - 1) prng
+  loop rng = do
+    index <- MWC.uniformR (0, n - 1) rng
     if   index == ref && n > 1
-    then loop prng
+    then loop rng
     else return $! index
 
