@@ -20,11 +20,11 @@ data Model a = Model
                              -> IO (a, Double),
 
                    -- Two 'scalars'
-                   scalars1  :: a -> Double,
-                   scalars2  :: a -> Double,
+                   scalar1   :: a -> Double,
+                   scalar2   :: a -> Double,
 
                    -- Convert to a string, for CSV output
-                   toStrLn   :: a -> String,
+                   toString  :: a -> String,
 
                    -- For header of CSV output, name the columns
                    header    :: String

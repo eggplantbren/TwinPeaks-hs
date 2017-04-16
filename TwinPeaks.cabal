@@ -17,8 +17,10 @@ extra-source-files:  README.md
 library
   hs-source-dirs:      lib
   default-language:    Haskell2010
-  exposed-modules:     TwinPeaks.Model,
-                       TwinPeaks.Sampler
+  exposed-modules:     TwinPeaks.ExampleModels,
+                       TwinPeaks.Model,
+                       TwinPeaks.Sampler,
+                       TwinPeaks.Utils
   build-depends:       base >= 4.7 && < 5,
                        mwc-random,
                        primitive,

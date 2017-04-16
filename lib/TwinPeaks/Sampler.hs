@@ -43,8 +43,8 @@ generateSampler Model {..} numParticles rng = do
   particles <- V.replicateM numParticles (fromPrior rng)
 
   -- Evaluate the scalars
-  let theScalars1 = V.map scalars1 particles
-  let theScalars2 = V.map scalars2 particles
+  let theScalars1 = V.map scalar1 particles
+  let theScalars2 = V.map scalar2 particles
 
   -- Convert to unboxed vectors
   let theScalars1' = U.convert theScalars1 :: U.Vector Double
