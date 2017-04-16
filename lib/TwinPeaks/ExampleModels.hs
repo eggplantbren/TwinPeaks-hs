@@ -32,12 +32,12 @@ simplePerturb xs rng = do
 
 -- First scalar
 simpleScalar1 :: U.Vector Double -> Double
-simpleScalar1 xs = U.sum $ U.map ((** 2.0) . (subtract 0.5)) xs
+simpleScalar1 xs = U.sum $ U.map ((** 2.0) . subtract 0.5) xs
 
 
 -- Second scalar
 simpleScalar2 :: U.Vector Double -> Double
-simpleScalar2 xs = U.sum xs
+simpleScalar2 = U.sum
 
 -- toString
 simpleToString :: U.Vector Double -> String

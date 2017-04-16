@@ -41,8 +41,9 @@ generateSampler :: Show a =>
                 -> IO (Sampler a)
 generateSampler Model {..} numParticles rng = do
 
-  putStr $ "Creating sampler with " ++ (show numParticles) ++
-             " particles..."
+  -- Print a message
+  putStr $ "Creating sampler with " ++ show numParticles ++
+           " particles..."
   hFlush stdout
 
   -- Generate the particles
