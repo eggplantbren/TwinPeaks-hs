@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module TwinPeaks.Sampler where
@@ -30,7 +29,7 @@ data Sampler a = Sampler
                      samplerStatuses  :: !(V.Vector ParticleStatus),
 
                      -- NS iteration counter
-                     samplerIteration :: !(Int)
+                     samplerIteration :: !Int
                  }
 
 

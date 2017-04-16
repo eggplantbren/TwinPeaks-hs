@@ -16,9 +16,8 @@ simpleSize = 10
 
 -- fromPrior
 simpleFromPrior :: Gen RealWorld -> IO (U.Vector Double)
-simpleFromPrior rng = do
-  xs <- U.replicateM simpleSize (uniform rng)
-  return xs
+simpleFromPrior rng = U.replicateM simpleSize (uniform rng)
+
 
 -- perturb
 simplePerturb :: U.Vector Double
@@ -41,14 +40,11 @@ simplePerturb xs rng = do
   -- Freeze modified vector
   xs' <- U.unsafeFreeze xsMutable
 
-  return $! (xs', 0.0)
+  return (xs', 0.0)
 
 -- First scalar
 simpleScalar1 :: U.Vector Double -> Double
-simpleScalar1 xs = U.foldl'
-                            (\acc x -> acc - 0.5*(x - 0.5)**2.0)
-                            0.0
-                            xs
+simpleScalar1 = U.foldl' (\acc x -> acc - 0.5*(x - 0.5)**2.0) 0.0
 
 -- Second scalar
 simpleScalar2 :: U.Vector Double -> Double
