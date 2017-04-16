@@ -20,17 +20,17 @@ data ParticleStatus = Foreground | Background
 data Sampler a = Sampler
                  {
                      -- All particles
-                     samplerParticles :: V.Vector a,
+                     samplerParticles :: !(V.Vector a),
 
                      -- The values of the particles' scalars
-                     samplerScalars1  :: U.Vector Double,
-                     samplerScalars2  :: U.Vector Double,
+                     samplerScalars1  :: !(U.Vector Double),
+                     samplerScalars2  :: !(U.Vector Double),
 
                      -- Status of each particle
-                     samplerStatuses  :: V.Vector ParticleStatus,
+                     samplerStatuses  :: !(V.Vector ParticleStatus),
 
                      -- NS iteration counter
-                     samplerIteration :: Int
+                     samplerIteration :: !(Int)
                  }
 
 
@@ -67,8 +67,9 @@ generateSampler Model {..} numParticles rng = do
                         theScalars2'
                         statuses 0
 
-  -- Use 'seq' to force evaluation of everything
-  seq sampler (return ()) :: IO ()
+  -- Uses sampler for the sole purpose of forcing its evaluation
+  seq sampler (return ())
+
   putStrLn "done."
 
   -- Use a strict return
