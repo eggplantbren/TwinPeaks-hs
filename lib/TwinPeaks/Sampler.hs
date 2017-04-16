@@ -68,10 +68,9 @@ generateSampler Model {..} numParticles rng = do
                         statuses 0
 
   -- Use 'seq' to force evaluation of everything
-  seq sampler (return ())       :: IO ()
-
+  seq sampler (return ()) :: IO ()
   putStrLn "done."
 
- -- Use a strict return
+  -- Use a strict return
   return $! sampler
 
