@@ -6,6 +6,7 @@ module TwinPeaks.Sampler where
 import Control.Monad.Primitive (RealWorld)
 import qualified Data.Vector as V
 import qualified Data.Vector.Unboxed as U
+import System.IO
 import TwinPeaks.Model
 import System.Random.MWC
 
@@ -33,11 +34,16 @@ data Sampler a = Sampler
 
 
 -- IO action to generate an initialised sampler.
-generateSampler :: Model a
+generateSampler :: Show a =>
+                   Model a
                 -> Int
                 -> Gen RealWorld
                 -> IO (Sampler a)
 generateSampler Model {..} numParticles rng = do
+
+  putStr $ "Creating sampler with " ++ (show numParticles) ++
+             " particles..."
+  hFlush stdout
 
   -- Generate the particles
   particles <- V.replicateM numParticles (fromPrior rng)
@@ -58,6 +64,8 @@ generateSampler Model {..} numParticles rng = do
                         theScalars1'
                         theScalars2'
                         statuses 0
+
+  putStrLn "done."
 
  -- Use a strict return
   return $! sampler
