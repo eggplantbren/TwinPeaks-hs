@@ -35,7 +35,8 @@ simplePerturb xs rng = do
 
   -- New value of coordinate
   x' <- fmap (xs U.! which + ) (randh rng)
-  UM.unsafeWrite xsMutable which x'
+  let x'' = wrap x' (0.0, 1.0)
+  UM.unsafeWrite xsMutable which x''
 
   -- Freeze modified vector
   xs' <- U.unsafeFreeze xsMutable

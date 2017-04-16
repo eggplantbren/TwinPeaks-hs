@@ -67,6 +67,9 @@ generateSampler Model {..} numParticles rng = do
                         theScalars2'
                         statuses 0
 
+  -- Use 'seq' to force evaluation of everything
+  seq sampler (return ())       :: IO ()
+
   putStrLn "done."
 
  -- Use a strict return
