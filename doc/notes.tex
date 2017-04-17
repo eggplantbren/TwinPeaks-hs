@@ -1,0 +1,59 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{dsfont}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[left=2cm, right=2cm, bottom=3cm, top=2cm]{geometry}
+\usepackage{natbib}
+\usepackage{microtype}
+
+\definecolor{orange}{rgb}{1, 0.5, 0}
+\definecolor{darkgreen}{rgb}{0, 0.5, 0}
+\definecolor{darkred}{rgb}{0.7, 0, 0}
+\newcommand{\btheta}{\boldsymbol{\theta}}
+
+\title{Notes}
+\author{Brendon J. Brewer}
+\date{}
+\begin{document}
+\maketitle
+
+% Need this after the abstract
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+\section*{A property of Nested Sampling}
+Consider a `constrained prior' distribution:
+\begin{align}
+p(\btheta | \ell^*) &=
+    \frac{\pi(\btheta)\mathds{1}(L(\btheta) > \ell^*)}
+         {X(\ell^*)}
+\end{align}
+
+The NS sequence gives you something like
+\begin{align}
+p_{\rm NS}(\btheta) &\propto \frac{\pi(\btheta)}{X(\btheta)}
+\end{align}
+for most of the space anyway --- you'd need to stop at some
+nonzero minimum $X$-value.
+
+\section*{TwinPeaks}
+Denote the two scalars by $L_1(\btheta)$ and $L_2(\btheta)$.
+Consider a `constrained prior' type distribution:
+\begin{align}
+p(\btheta | L_1^*, L_2^*) &\propto
+    \left\{
+        \begin{array}{lr}
+            \pi(\btheta), & L_1(\btheta) > L_1^* \textnormal{ and }
+                            L_2(\btheta) > L_2^* \\
+            0             & \textnormal{otherwise}.
+        \end{array}
+    \right.
+\end{align}
+
+%Suppose there are $N$ particles,
+
+
+\end{document}
+
