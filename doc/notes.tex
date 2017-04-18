@@ -12,6 +12,7 @@
 \definecolor{darkgreen}{rgb}{0, 0.5, 0}
 \definecolor{darkred}{rgb}{0.7, 0, 0}
 \newcommand{\btheta}{\boldsymbol{\theta}}
+\newcommand{\tn}{\textnormal}
 
 \title{Notes}
 \author{Brendon J. Brewer}
@@ -70,22 +71,64 @@ D_{\rm KL}(p_\ell \,||\, p_{\rm NS})
 \end{align}
 Crucially, {\em this does not depend on} $\ell$.
 
-
 \section*{TwinPeaks}
 Denote the two scalars by $L_1(\btheta)$ and $L_2(\btheta)$.
-Consider a `constrained prior' type distribution:
+The implied prior for $L_1$ and $L_2$ is $\pi(L_1, L_2)$.
+Consider a constrained distribution
 \begin{align}
-p(\btheta | L_1^*, L_2^*) &\propto
+p(L_1, L_2 \,|\, \ell_1, \ell_2) &\propto
     \left\{
         \begin{array}{lr}
-            \pi(\btheta), & L_1(\btheta) > L_1^* \textnormal{ and }
-                            L_2(\btheta) > L_2^* \\
-            0             & \textnormal{otherwise}.
+            \pi(L_1, L_2),  &   L_1 > \ell_1 \tn{ and } L_2 > \ell_2 \\
+            0,              &   \tn{otherwise}.
         \end{array}
     \right.
 \end{align}
+The normalising constant of this distribution is
+\begin{align}
+X(\ell_1, \ell_2) &=
+    \int_{\ell_1}^{\infty}
+    \int_{\ell_2}^{\infty}
+        \pi(L_1, L_2)
+    \, dL_1
+    \, dL_2.
+\end{align}
 
-%Suppose there are $N$ particles,
+My proposed TwinPeaks distribution is
+\begin{align}
+p_{\rm TP}(L_1, L_2) &=
+  \frac{1}{C}
+  \frac{\pi(L_1, L_2)}{X(L_1, L_2)}.
+\end{align}
+As in the previous section, we can compute the KL divergence from
+this to a constrained prior:
+\begin{align}
+D_{\rm KL}(p_{\ell_1, \ell_2} \,||\, p_{\rm TP})
+  &= \int_{\ell_1}^{\infty}
+     \int_{\ell_2}^{\infty}
+         \frac{\pi(L_1, L_2)}{X(\ell_1, \ell_2)}
+         \log\left[C \frac{X(L_1, L_2)}{X(\ell_1, \ell_2)} \right]
+     \, dL_1
+     \, dL_2 \\
+  &=
+     \int_{\ell_1}^{\infty}
+     \int_{\ell_2}^{\infty}
+         \frac{\pi(L_1, L_2)}{X(\ell_1, \ell_2)}
+         \log\left[C \frac{X(L_1, L_2)}{X(\ell_1, \ell_2)} \right]
+     \, dL_1
+     \, dL_2 \\
+  &=
+     \log C \,-\, \log X(\ell_1, \ell_2) \\ &\quad\quad\quad
+     \,+\,
+     \frac{1}{X(\ell_1, \ell_2)}
+     \int_{\ell_1}^{\infty}
+     \int_{\ell_2}^{\infty}
+         \pi(L_1, L_2)
+         \log X(L_1, L_2)
+     \, dL_1
+     \, dL_2 \\
+\end{align}
+Doing the integral in terms of $X$
 
 
 \end{document}
