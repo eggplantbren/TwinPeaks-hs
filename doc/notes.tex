@@ -26,12 +26,17 @@
 \section*{A property of Nested Sampling}
 Consider the implied prior for $L$, denoted $\pi(L)$. This is
 a probability distribution over the real line.
-NS sequence rectifies $\pi$ to give you the distribution
+The NS sequence rectifies $\pi$ to give you the distribution
 \begin{align}
-p_{\rm NS}(L) &= C \frac{\pi(L)}{X(L)}
+p_{\rm NS}(L) &= \frac{1}{C} \frac{\pi(L)}{X(L)}
 \end{align}
-which will be proper in practice as the run has to terminate.
-
+and
+\begin{align}
+C &= \int_{-\infty}^{L_{\rm max}} \frac{\pi(L)}{X(L)} \, dL
+\end{align}
+where $L_{\rm max}$ is the maximum likelihood from the
+discarded points of the run
+(not necessarily the overall maximum likelihood).
 The amount of prior mass above any specified likelihood value
 $\ell$ is
 \begin{align}
@@ -45,8 +50,19 @@ the constrained prior:
 \begin{align}
 D_{\rm KL}(p_\ell \,||\, \pi)
   &= \int_{\ell}^{\infty} \pi(L)
-           \log\left[\frac{X(L)}{C}\right] \, dL
+           \log\left[\frac{X(L)}{C}\right] \, dL \\
+  &= \int_{\ell}^{\infty} \pi(L)\log X(L) \, dL - \log C.
 \end{align}
+We can take the expectation (integral) in terms of $X$ instead of
+$L$, and use the fact that the prior corresponds to a
+Uniform$(0,1)$ distribution for $X$:
+\begin{align}
+D_{\rm KL}(p_\ell \,||\, \pi)
+  &= \int_0^{X(\ell)} \log(X) \, dX - \log C \\
+  &= \left[X\log(X) - X\right]_0^{X(\ell)} - \log C \\
+  &= X(\ell)\log X(\ell) - X(\ell) - \log C
+\end{align}
+
 
 
 \section*{TwinPeaks}

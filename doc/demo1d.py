@@ -17,7 +17,8 @@ X = 1.0 - dL*np.cumsum(pi)
 # NS distribution
 pNS = np.zeros(len(L))
 pNS[X > 0.0] = pi[X > 0.0]/X[X > 0.0] # Avoid division by zero
-pNS /= np.trapz(pNS, x=L)
+C = np.trapz(pNS, x=L)
+pNS /= C
 
 # Plot the prior and the NS distribution
 plt.plot(L, pi,  label=r"$\pi$")
