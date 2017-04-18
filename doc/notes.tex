@@ -24,19 +24,30 @@
 \setlength{\parskip}{8pt}
 
 \section*{A property of Nested Sampling}
-Consider a `constrained prior' distribution:
+Consider the implied prior for $L$, denoted $\pi(L)$. This is
+a probability distribution over the real line.
+NS sequence rectifies $\pi$ to give you the distribution
 \begin{align}
-p(\btheta | \ell^*) &=
-    \frac{\pi(\btheta)\mathds{1}(L(\btheta) > \ell^*)}
-         {X(\ell^*)}
+p_{\rm NS}(L) &= C \frac{\pi(L)}{X(L)}
+\end{align}
+which will be proper in practice as the run has to terminate.
+
+The amount of prior mass above any specified likelihood value
+$\ell$ is
+\begin{align}
+X(\ell) &= \int_{\ell}^{\infty} \pi(L) \, dL 
+\end{align}
+which is the normalisation constant of a constrained prior with
+threshold $\ell$.
+NS gives us the opportunity to measure this for any given
+value of $\ell$. Consider the KL divergence from $p_{\rm NS}$ to
+the constrained prior:
+\begin{align}
+D_{\rm KL}(p_\ell \,||\, \pi)
+  &= \int_{\ell}^{\infty} \pi(L)
+           \log\left[\frac{X(L)}{C}\right] \, dL
 \end{align}
 
-The NS sequence gives you something like
-\begin{align}
-p_{\rm NS}(\btheta) &\propto \frac{\pi(\btheta)}{X(\btheta)}
-\end{align}
-for most of the space anyway --- you'd need to stop at some
-nonzero minimum $X$-value.
 
 \section*{TwinPeaks}
 Denote the two scalars by $L_1(\btheta)$ and $L_2(\btheta)$.
