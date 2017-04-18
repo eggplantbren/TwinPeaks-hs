@@ -48,21 +48,27 @@ NS gives us the opportunity to measure this for any given
 value of $\ell$. Consider the KL divergence from $p_{\rm NS}$ to
 the constrained prior:
 \begin{align}
-D_{\rm KL}(p_\ell \,||\, \pi)
-  &= \int_{\ell}^{\infty} \pi(L)
-           \log\left[\frac{X(L)}{C}\right] \, dL \\
-  &= \int_{\ell}^{\infty} \pi(L)\log X(L) \, dL - \log C.
+D_{\rm KL}(p_\ell \,||\, p_{\rm NS})
+  &= \int_{\ell}^{\infty} \frac{\pi(L)}{X(\ell)}
+           \log\left[\frac{\pi(L)/X(\ell)}{\pi(L)/C/X(L)}\right] \, dL \\
+  &= \int_{\ell}^{\infty} \frac{\pi(L)}{X(\ell)}
+           \log\left[\frac{CX(L)}{X(\ell)}\right] \, dL
 \end{align}
 We can take the expectation (integral) in terms of $X$ instead of
 $L$, and use the fact that the prior corresponds to a
 Uniform$(0,1)$ distribution for $X$:
 \begin{align}
-D_{\rm KL}(p_\ell \,||\, \pi)
-  &= \int_0^{X(\ell)} \log(X) \, dX - \log C \\
-  &= \left[X\log(X) - X\right]_0^{X(\ell)} - \log C \\
-  &= X(\ell)\log X(\ell) - X(\ell) - \log C
+D_{\rm KL}(p_\ell \,||\, p_{\rm NS})
+    &= \int_0^{X(\ell)} \frac{1}{X(\ell)}
+           \log(X) \, dX - \log X(\ell) + \log C \\
+    &= \frac{1}{X(\ell)} \int_0^{X(\ell)} \log(X) \, dX
+           - \log X(\ell) + \log C \\
+    &= \frac{1}{X(\ell)}\left[X\log(X) - X\right]_0^{X(\ell)}
+           - \log X(\ell) + \log C \\
+    &= \log X(\ell) - 1 - \log X(\ell) + \log C \\
+    &= \log C - 1.
 \end{align}
-
+Crucially, {\em this does not depend on} $\ell$.
 
 
 \section*{TwinPeaks}
