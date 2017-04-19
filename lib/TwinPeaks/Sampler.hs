@@ -63,3 +63,11 @@ generateSampler Model {..} numParticles rng = do
   -- Use a strict return
   return $! sampler
 
+-- Find worst index for scalar 1
+worstIndexScalar1 :: Sampler a -> Int
+worstIndexScalar1 (Sampler {..}) = U.minIndex samplerScalars1
+
+-- Find worst index for scalar 2
+worstIndexScalar2 :: Sampler a -> Int
+worstIndexScalar2 (Sampler {..}) = U.minIndex samplerScalars2
+

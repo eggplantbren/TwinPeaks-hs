@@ -9,6 +9,7 @@ import TwinPeaks.Sampler
 main :: IO ()
 main = withSystemRandom . asGenIO $ \rng -> do
   sampler <- generateSampler simpleExample 10 rng
-  print sampler
+  print $ worstIndexScalar1 sampler
+  print $ worstIndexScalar2 sampler
   return ()
 
