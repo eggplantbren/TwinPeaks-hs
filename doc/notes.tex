@@ -24,20 +24,29 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{8pt}
 
-\section*{A property of Nested Sampling}
+\section{A property of Nested Sampling}
 Consider the implied prior for $L$, denoted $\pi(L)$. This is
 a probability distribution over the real line.
+As usual, define $X(\ell)$ as the amount of prior mass
+with likelihood above $\ell$:
+\begin{align}
+X(\ell) &= \int_\ell^\infty \pi(L) \, dL.
+\end{align}
+
 The NS sequence rectifies $\pi$ to give you the distribution
 \begin{align}
 p_{\rm NS}(L) &= \frac{1}{C} \frac{\pi(L)}{X(L)}
 \end{align}
-and
+where
 \begin{align}
 C &= \int_{-\infty}^{L_{\rm max}} \frac{\pi(L)}{X(L)} \, dL
 \end{align}
-where $L_{\rm max}$ is the maximum likelihood from the
+is a normalising constant,
+and $L_{\rm max}$ is the maximum likelihood from the
 discarded points of the run
 (not necessarily the overall maximum likelihood).
+
+
 The amount of prior mass above any specified likelihood value
 $\ell$ is
 \begin{align}
@@ -71,64 +80,95 @@ D_{\rm KL}(p_\ell \,||\, p_{\rm NS})
 \end{align}
 Crucially, {\em this does not depend on} $\ell$.
 
-\section*{TwinPeaks}
-Denote the two scalars by $L_1(\btheta)$ and $L_2(\btheta)$.
-The implied prior for $L_1$ and $L_2$ is $\pi(L_1, L_2)$.
-Consider a constrained distribution
+\section{Uniqueness}
+Is $p_{\rm NS}$ the only distribution with the above property?
+Consider the KL divergence from some distribution $q$
+to the constrained prior.
+We will then see what choices of $q$ have the above property.
+The KL divergence is
 \begin{align}
-p(L_1, L_2 \,|\, \ell_1, \ell_2) &\propto
-    \left\{
-        \begin{array}{lr}
-            \pi(L_1, L_2),  &   L_1 > \ell_1 \tn{ and } L_2 > \ell_2 \\
-            0,              &   \tn{otherwise}.
-        \end{array}
-    \right.
-\end{align}
-The normalising constant of this distribution is
-\begin{align}
-X(\ell_1, \ell_2) &=
-    \int_{\ell_1}^{\infty}
-    \int_{\ell_2}^{\infty}
-        \pi(L_1, L_2)
-    \, dL_1
-    \, dL_2.
+D_{\rm KL}(p_\ell \,||\, q)
+  &= \int_{\ell}^{\infty} \frac{\pi(L)}{X(\ell)}
+           \log\left[\frac{\pi(L)/X(\ell)}{q(L)}\right] \, dL
 \end{align}
 
-My proposed TwinPeaks distribution is
+I'll need this property, to differentiate an integral
 \begin{align}
-p_{\rm TP}(L_1, L_2) &=
-  \frac{1}{C}
-  \frac{\pi(L_1, L_2)}{X(L_1, L_2)}.
+\frac{d}{dy}\left(\int_y^\infty f(x, y) \, dx\right)
+  = -f(y, y).
 \end{align}
-As in the previous section, we can compute the KL divergence from
-this to a constrained prior:
+
+The derivative of the KL divergence, with respect to $\ell$, is
 \begin{align}
-D_{\rm KL}(p_{\ell_1, \ell_2} \,||\, p_{\rm TP})
-  &= \int_{\ell_1}^{\infty}
-     \int_{\ell_2}^{\infty}
-         \frac{\pi(L_1, L_2)}{X(\ell_1, \ell_2)}
-         \log\left[C \frac{X(L_1, L_2)}{X(\ell_1, \ell_2)} \right]
-     \, dL_1
-     \, dL_2 \\
-  &=
-     \int_{\ell_1}^{\infty}
-     \int_{\ell_2}^{\infty}
-         \frac{\pi(L_1, L_2)}{X(\ell_1, \ell_2)}
-         \log\left[C \frac{X(L_1, L_2)}{X(\ell_1, \ell_2)} \right]
-     \, dL_1
-     \, dL_2 \\
-  &=
-     \log C \,-\, \log X(\ell_1, \ell_2) \\ &\quad\quad\quad
-     \,+\,
-     \frac{1}{X(\ell_1, \ell_2)}
-     \int_{\ell_1}^{\infty}
-     \int_{\ell_2}^{\infty}
-         \pi(L_1, L_2)
-         \log X(L_1, L_2)
-     \, dL_1
-     \, dL_2 \\
+\frac{d}{d\ell} D_{\rm KL}(p_\ell \,||\, q)
+  &= \frac{d}{d\ell}\left(\int_{\ell}^{\infty} \frac{\pi(L)}{X(\ell)}
+           \log\left[\frac{\pi(L)/X(\ell)}{q(L)}\right] \, dL\right) \\
+  &= -\frac{\pi(\ell)}{X(\ell)}
+           \log\left[\frac{\pi(\ell)/X(\ell)}{q(\ell)}\right].
 \end{align}
-Doing the integral in terms of $X$
+To satisfy the nice property of the previous section, the derivative
+must be zero. We can only achieve this by varying $q$ to cancel
+the entire term inside the logarithm --- i.e., 
+
+
+%\section*{TwinPeaks}
+%Denote the two scalars by $L_1(\btheta)$ and $L_2(\btheta)$.
+%The implied prior for $L_1$ and $L_2$ is $\pi(L_1, L_2)$.
+%Consider a constrained distribution
+%\begin{align}
+%p(L_1, L_2 \,|\, \ell_1, \ell_2) &\propto
+%    \left\{
+%        \begin{array}{lr}
+%            \pi(L_1, L_2),  &   L_1 > \ell_1 \tn{ and } L_2 > \ell_2 \\
+%            0,              &   \tn{otherwise}.
+%        \end{array}
+%    \right.
+%\end{align}
+%The normalising constant of this distribution is
+%\begin{align}
+%X(\ell_1, \ell_2) &=
+%    \int_{\ell_1}^{\infty}
+%    \int_{\ell_2}^{\infty}
+%        \pi(L_1, L_2)
+%    \, dL_1
+%    \, dL_2.
+%\end{align}
+
+%My proposed TwinPeaks distribution is
+%\begin{align}
+%p_{\rm TP}(L_1, L_2) &=
+%  \frac{1}{C}
+%  \frac{\pi(L_1, L_2)}{X(L_1, L_2)}.
+%\end{align}
+%As in the previous section, we can compute the KL divergence from
+%this to a constrained prior:
+%\begin{align}
+%D_{\rm KL}(p_{\ell_1, \ell_2} \,||\, p_{\rm TP})
+%  &= \int_{\ell_1}^{\infty}
+%     \int_{\ell_2}^{\infty}
+%         \frac{\pi(L_1, L_2)}{X(\ell_1, \ell_2)}
+%         \log\left[C \frac{X(L_1, L_2)}{X(\ell_1, \ell_2)} \right]
+%     \, dL_1
+%     \, dL_2 \\
+%  &=
+%     \int_{\ell_1}^{\infty}
+%     \int_{\ell_2}^{\infty}
+%         \frac{\pi(L_1, L_2)}{X(\ell_1, \ell_2)}
+%         \log\left[C \frac{X(L_1, L_2)}{X(\ell_1, \ell_2)} \right]
+%     \, dL_1
+%     \, dL_2 \\
+%  &=
+%     \log C \,-\, \log X(\ell_1, \ell_2) \\ &\quad\quad\quad
+%     \,+\,
+%     \frac{1}{X(\ell_1, \ell_2)}
+%     \int_{\ell_1}^{\infty}
+%     \int_{\ell_2}^{\infty}
+%         \pi(L_1, L_2)
+%         \log X(L_1, L_2)
+%     \, dL_1
+%     \, dL_2 \\
+%\end{align}
+%Doing the integral in terms of $X$
 
 
 \end{document}
