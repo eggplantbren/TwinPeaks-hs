@@ -97,26 +97,45 @@ The KL divergence is
 \begin{align}
 D_{\rm KL}(p_\ell \,||\, q)
   &= \int_{\ell}^{\infty} \frac{\pi(L)}{X(\ell)}
-           \log\left[\frac{\pi(L)/X(\ell)}{q(L)}\right] \, dL
-\end{align}
-
-I'll need this property, to differentiate an integral
-\begin{align}
-\frac{d}{dy}\left(\int_y^\infty f(x, y) \, dx\right)
-  = -f(y, y).
+           \log\left[\frac{\pi(L)/X(\ell)}{q(L)}\right] \, dL \\
+  &= -\log X(\ell) + \frac{1}{X(\ell)}
+    \int_{\ell}^{\infty} \pi(L)
+               \log\left[\frac{\pi(L)}{q(L)}\right] \, dL
 \end{align}
 
 The derivative of the KL divergence, with respect to $\ell$, is
 \begin{align}
 \frac{d}{d\ell} D_{\rm KL}(p_\ell \,||\, q)
-  &= \frac{d}{d\ell}\left(\int_{\ell}^{\infty} \frac{\pi(L)}{X(\ell)}
-           \log\left[\frac{\pi(L)/X(\ell)}{q(L)}\right] \, dL\right) \\
-  &= -\frac{\pi(\ell)}{X(\ell)}
-           \log\left[\frac{\pi(\ell)/X(\ell)}{q(\ell)}\right].
+  &= -\frac{X'(\ell)}{X(\ell)}
+     + \frac{X(\ell)\pi(\ell)\log\left[\pi(\ell)/q(\ell)\right]
+             -X'(\ell)\int_{\ell}^{\infty} \pi(L)
+               \log\left[\pi(L)/q(L)\right] \, dL}
+            {X(\ell)^2} \\
+  &= -\frac{X'(\ell)}{X(\ell)}
+     + \frac{\pi(\ell)\log\left[\pi(\ell)/q(\ell)\right]}
+            {X(\ell)}
+     - \frac{X'(\ell)/X(\ell)\int_{\ell}^{\infty} \pi(L)
+               \log\left[\pi(L)/q(L)\right] \, dL}
+            {X(\ell)}\\
+  &= -\frac{X'(\ell)}{X(\ell)}
+     + \frac{\pi(\ell)\log\left[\pi(\ell)/q(\ell)\right]}
+            {X(\ell)}
+     - \frac{X'(\ell)\left(D_{\rm KL} + \log X(\ell)\right)}
+            {X(\ell)} \\
+  &= \frac{\pi(\ell)}{X(\ell)}
+        \Big(1
+             + \log\left[\pi(\ell)/q(\ell)\right]
+             + D_{\rm KL} + \log X(\ell)
+        \Big)
 \end{align}
 To satisfy the nice property of the previous section, the derivative
-must be zero. We can only achieve this by varying $q$ to cancel
-the entire term inside the logarithm --- i.e., 
+must be zero. This is achieved if
+\begin{align}
+1 + \log\left[\pi(\ell)/q(\ell)\right]
++ D_{\rm KL} + \log X(\ell) &= 0 \\
+1 + \log\pi(\ell) - \log q(\ell)
++ D_{\rm KL} + \log X(\ell) &= 0
+\end{align}
 
 
 %\section*{TwinPeaks}

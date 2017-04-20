@@ -36,6 +36,6 @@ print(KL(constrained_prior(0.6)["p"], pNS))
 print(KL(constrained_prior(0.7)["p"], pNS))
 
 plt.plot(L, pi)
-plt.plot(L, X)
+plt.plot(L, -pi/X*np.log(pi/X/pNS))
 plt.show()
 
