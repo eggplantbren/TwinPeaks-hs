@@ -32,6 +32,7 @@ with likelihood above $\ell$:
 \begin{align}
 X(\ell) &= \int_\ell^\infty \pi(L) \, dL.
 \end{align}
+This is the complementary CDF of $L$.
 
 The NS sequence rectifies $\pi$ to give you the distribution
 \begin{align}
@@ -46,14 +47,21 @@ and $L_{\rm max}$ is the maximum likelihood from the
 discarded points of the run
 (not necessarily the overall maximum likelihood).
 
-
-The amount of prior mass above any specified likelihood value
-$\ell$ is
+Consider a `constrained prior' distribution, which is just the
+prior $\pi$ but truncated so it only includes values above
+a threshold $\ell$:
 \begin{align}
-X(\ell) &= \int_{\ell}^{\infty} \pi(L) \, dL 
+p(L \,|\, \ell) &\propto
+               \left\{
+                 \begin{array}{lr}
+                   \pi(L),&  L > \ell, \\
+                   0,     &  \tn{otherwise}.
+                 \end{array}
+               \right.
 \end{align}
-which is the normalisation constant of a constrained prior with
-threshold $\ell$.
+The normalisation constant of a constrained prior is
+just $X(\ell)$.
+
 NS gives us the opportunity to measure this for any given
 value of $\ell$. Consider the KL divergence from $p_{\rm NS}$ to
 the constrained prior:
