@@ -1,7 +1,7 @@
 module TwinPeaks.ExampleModels where
 
 -- Imports
-import Control.Monad.Primitive (RealWorld)
+import Control.Monad.Primitive
 import qualified Data.Vector.Unboxed as U
 import qualified Data.Vector.Unboxed.Mutable as UM
 import System.Random.MWC
@@ -15,7 +15,8 @@ simpleSize :: Int
 simpleSize = 10
 
 -- fromPrior
-simpleFromPrior :: Gen RealWorld -> IO (U.Vector Double)
+simpleFromPrior :: Gen RealWorld
+                -> IO (U.Vector Double)
 simpleFromPrior rng = U.replicateM simpleSize (uniform rng)
 
 

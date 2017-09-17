@@ -1,9 +1,9 @@
 module TwinPeaks.Utils where
 
 -- Imports
-import Control.Monad.Primitive (RealWorld)
-import System.Random.MWC as MWC (Gen, uniform, uniformR)
-import System.Random.MWC.Distributions as MWC (standard)
+import Control.Monad.Primitive
+import System.Random.MWC as MWC
+import System.Random.MWC.Distributions as MWC
 
 -- Logsumexp
 logsumexp :: Double -> Double -> Double
@@ -30,8 +30,9 @@ wrap x (a, b)
     xmin = min a b
     xmax = max a b
 
--- My favourite heavy tailed distribution
-randh :: Gen RealWorld -> IO Double
+-- My favourite heavy tailed distribution, used for proposals
+randh :: Gen RealWorld
+      -> IO Double
 randh rng = do
     a <- MWC.standard rng
     b <- MWC.uniform  rng
@@ -42,13 +43,4 @@ randh rng = do
       let t = a/sqrt (- (log b))
       in  10.0**(1.5 - 3.0 * abs t)*n
 
--- Choose a number in the supplied range
--- that is different from the supplied reference.
-chooseCopy :: Int -> Int -> Gen RealWorld -> IO Int
-chooseCopy ref n = loop where
-  loop rng = do
-    index <- MWC.uniformR (0, n - 1) rng
-    if   index == ref && n > 1
-    then loop rng
-    else return $! index
 
