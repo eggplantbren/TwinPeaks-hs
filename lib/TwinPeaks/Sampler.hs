@@ -18,7 +18,15 @@ data Options = Options
 
                   -- Backtracking length
                   lambda       :: !Double
-               }
+               } deriving (Eq, Read, Show)
+
+-- Smart constructor of options
+createOptions :: Int -> Int -> Double -> Maybe Options
+createOptions n m l
+  | n <= 0 = Nothing
+  | m <= 0 = Nothing
+  | l <= 0.0 = Nothing
+  | otherwise = Just $ Options n m l
 
 
 -- A type that represents a sampler's state
@@ -36,4 +44,7 @@ data Sampler a = Sampler
                    -- Particle indices
                    particleIndices :: !(U.Vector (Int, Int))
                  }
+
+
+
 
