@@ -11,16 +11,19 @@ main :: IO ()
 main = withSystemRandom . asGenIO $ \rng -> do
 
   -- Print a welcome message
-  putStrLn "# Running TwinPeaks..."
+  putStrLn "# Running TwinPeaks...\n"
 
   -- A set of sampler options
   let someOptions = fromMaybe
                       (error "Error. Invalid options.")
-                      (createOptions 1 10000 10)
+                      (createOptions 10 10000 10)
 
   -- Display the sampler options
   putStrLn $ "# Sampler options set to:"
-  putStrLn $ "#   " ++ show someOptions
+  putStrLn $ "#   " ++ show someOptions ++ "\n"
+
+  -- Initialise a sampler
+  sampler <- initSampler simpleExample someOptions rng
 
   return ()
 

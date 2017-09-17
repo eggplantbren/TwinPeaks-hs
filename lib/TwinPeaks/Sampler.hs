@@ -3,21 +3,24 @@
 module TwinPeaks.Sampler where
 
 -- Imports
-import qualified Data.Vector as V
+import Control.Monad.Primitive
 import qualified Data.Vector.Unboxed as U
+import qualified Data.Vector as V
+import System.IO
+import System.Random.MWC
 import TwinPeaks.Model
 
 -- A type that contains sampler options
 data Options = Options
                {
                   -- Number of particles
-                  numParticles :: !Int,
+                  optionsNumParticles :: !Int,
 
                   -- MCMC steps per level
-                  mcmcSteps    :: !Int,
+                  optionsMcmcSteps    :: !Int,
 
                   -- Backtracking length
-                  lambda       :: !Double
+                  optionsLambda       :: !Double
                } deriving (Eq, Read, Show)
 
 -- Smart constructor of options
@@ -33,18 +36,45 @@ createOptions n m l
 data Sampler a = Sampler
                  {
                    -- The model specification
-                   theModel :: !(Model a),
+                   samplerModel :: !(Model a),
 
                    -- The options
-                   options :: !Options,
+                   samplerOptions :: !Options,
 
                    -- The particles! What else?
-                   theParticles :: !(V.Vector a),
+                   samplerParticles :: !(V.Vector a),
+
+                   -- The scalars
+                   samplerFs :: !(U.Vector Double),
+                   samplerGs :: !(U.Vector Double),
 
                    -- Particle indices
-                   particleIndices :: !(U.Vector (Int, Int))
+                   samplerParticleIs :: !(U.Vector Int),
+                   samplerParticleJs :: !(U.Vector Int)
                  }
 
 
+-- Initialise a Sampler
+initSampler :: Model a -> Options -> Gen RealWorld -> IO (Sampler a)
+initSampler Model {..} Options {..} rng = do
+  let n = optionsNumParticles
+  let is = U.replicate n 0
+  let js = U.replicate n 0
 
+  -- Print a message
+  putStr $ "# Generating " ++ show n ++ " particles "
+  putStr "from the prior..."
+  hFlush stdout
+
+  -- Generate and evaluate particles
+  particles <- V.replicateM n (modelFromPrior rng)
+  let fs = U.convert $ V.map modelScalar1 particles
+  let gs = U.convert $ V.map modelScalar2 particles
+
+  -- Create the sampler
+  let sampler = Sampler Model {..} Options {..} particles fs gs is js
+
+  -- Print 'done', but only after sampler is fully evaluated
+  seq sampler $ putStrLn "done."
+  return sampler
 

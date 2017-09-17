@@ -10,24 +10,24 @@ import System.Random.MWC
 data Model a = Model
                {
                    -- A function to generate from the prior
-                   fromPrior :: Gen RealWorld
-                             -> IO a,
+                   modelFromPrior :: Gen RealWorld
+                                  -> IO a,
 
                    -- A function to do a Metropolis proposal
                    -- and return a perturbed particle, along
                    -- with logH
-                   perturb   :: a
-                             -> Gen RealWorld
-                             -> IO (a, Double),
+                   modelPerturb   :: a
+                                  -> Gen RealWorld
+                                  -> IO (a, Double),
 
                    -- The two scalar functions to ascend
-                   scalar1   :: a -> Double,
-                   scalar2   :: a -> Double,
+                   modelScalar1   :: a -> Double,
+                   modelScalar2   :: a -> Double,
 
                    -- Convert to a string, for CSV output
-                   toString  :: a -> String,
+                   modelToString  :: a -> String,
 
                    -- For header of CSV output, name the columns
-                   header    :: String
+                   modelHeader    :: String
                }
 
