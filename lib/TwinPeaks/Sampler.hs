@@ -89,8 +89,8 @@ doStep :: Sampler a
 doStep Sampler {..} rng = do
 
   -- Choose a particle to move
-  let steps = optionsMcmcSteps samplerOptions
-  k <- uniformR (0, steps - 1) rng :: IO Int
+  let n = optionsNumParticles samplerOptions
+  k <- uniformR (0, n - 1) rng :: IO Int
 
   -- Generate proposal
   (proposal, logH) <- modelPerturb samplerModel (samplerParticles V.! k) rng
