@@ -1,11 +1,14 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module TwinPeaks.Sampler where
 
 -- Imports
 import Control.Monad.Primitive
-import qualified Data.Vector.Unboxed as U
 import qualified Data.Vector as V
+import qualified Data.Vector.Mutable as VM
+import qualified Data.Vector.Unboxed as U
+import qualified Data.Vector.Unboxed.Mutable as UM
 import System.IO
 import System.Random.MWC
 import TwinPeaks.Model
@@ -49,8 +52,8 @@ data Sampler a = Sampler
                    samplerGs :: !(U.Vector Double),
 
                    -- Particle indices
-                   samplerParticleIs :: !(U.Vector Int),
-                   samplerParticleJs :: !(U.Vector Int)
+                   samplerIs :: !(U.Vector Int),
+                   samplerJs :: !(U.Vector Int)
                  }
 
 
@@ -77,4 +80,64 @@ initSampler Model {..} Options {..} rng = do
   -- Print 'done', but only after sampler is fully evaluated
   seq sampler $ putStrLn "done."
   return sampler
+
+
+-- Do a single Metropolis step of a particle
+doStep :: Sampler a
+       -> Gen RealWorld
+       -> IO (Sampler a)
+doStep Sampler {..} rng = do
+
+  -- Choose a particle to move
+  let steps = optionsMcmcSteps samplerOptions
+  k <- uniformR (0, steps - 1) rng :: IO Int
+
+  -- Generate proposal
+  (proposal, logH) <- modelPerturb samplerModel (samplerParticles V.! k) rng
+  let proposalF = modelScalar1 samplerModel proposal
+  let proposalG = modelScalar2 samplerModel proposal
+
+  -- Acceptance probability
+  let alpha = if logH >= 0.0 then 1.0 else exp logH :: Double
+  u <- uniform rng :: IO Double
+
+  -- Accept?
+  sampler' <- if u <= alpha then do
+                    -- Replace particle with proposal
+                    samplerParticles' <- V.unsafeThaw samplerParticles
+                    VM.write samplerParticles' k proposal
+                    samplerParticles'' <- V.unsafeFreeze samplerParticles'
+
+                    -- Replace f and g value with those of proposal
+                    samplerFs' <- U.unsafeThaw samplerFs
+                    samplerGs' <- U.unsafeThaw samplerGs
+                    UM.write samplerFs' k proposalF
+                    UM.write samplerGs' k proposalG
+                    samplerFs'' <- U.unsafeFreeze samplerFs'
+                    samplerGs'' <- U.unsafeFreeze samplerGs'
+
+                    return $ Sampler samplerModel
+                                     samplerOptions
+                                     samplerParticles''
+                                     samplerFs''
+                                     samplerGs''
+                                     samplerIs
+                                     samplerJs
+                 else return Sampler {..}
+
+  return sampler'
+
+
+-- Do some exploration for a while
+doSteps :: Sampler a
+        -> Int
+        -> Gen RealWorld
+        -> IO (Sampler a)
+doSteps !sampler i rng
+  | i >= optionsMcmcSteps (samplerOptions sampler) = return sampler
+  | otherwise = do
+                    sampler' <- doStep sampler rng
+                    putStr "."
+                    hFlush stdout
+                    doSteps sampler' (i+1) rng
 

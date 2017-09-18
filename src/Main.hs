@@ -25,5 +25,8 @@ main = withSystemRandom . asGenIO $ \rng -> do
   -- Initialise a sampler
   sampler <- initSampler simpleExample someOptions rng
 
+  -- Do some MCMC
+  _ <- doSteps sampler 0 rng
+
   return ()
 
